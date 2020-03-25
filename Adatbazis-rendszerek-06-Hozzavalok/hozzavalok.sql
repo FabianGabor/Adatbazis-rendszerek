@@ -53,11 +53,11 @@ SELECT alapanyag from igeny GROUP by 1 ORDER BY COUNT(*) DESC LIMIT 3;
 -- 7. Listázza, mely alapanyag-ID-k szerepelnek legalább háromszor az `igeny` táblában!
 SELECT alapanyag from igeny GROUP BY 1 HAVING COUNT(*) >= 2
 
--- 8. Listázza, mely alapanyag-ID-k szerepelnek legalább háromszor az `igeny` táblában, 
--- de az alapanyagok nevét is listázza!
+-- 8. Listázza, mely alapanyag-ID-k szerepelnek legalább háromszor az `igeny` táblában, de az alapanyagok nevét is listázza!
 SELECT igeny.alapanyag, alapanyag.nev, COUNT(*) FROM (igeny JOIN alapanyag on igeny.alapanyag = alapanyag.ID) GROUP BY igeny.alapanyag HAVING COUNT(*)>=3
 
 -- 9. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok ID-jét írassa ki!
+SELECT alapanyag.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás';
 
 -- 10. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok nevét, mennyiségét és mértékegységét írassa ki!
 
