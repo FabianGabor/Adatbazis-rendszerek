@@ -1,7 +1,7 @@
 /**************************
 AUTO_CSOP tábla létrehozása
 **************************/
-drop table if exists AUTO_CSOP;
+-- drop table if exists AUTO_CSOP;
 --
 create table AUTO_CSOP(
 auto_csop_nev varchar(6) not null,
