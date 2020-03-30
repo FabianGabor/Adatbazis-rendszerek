@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS igeny (
     FOREIGN KEY (`recept`) REFERENCES `recept` (`ID`)
 );
 
+ALTER TABLE igeny ADD CONSTRAINT fk_alapanyag FOREIGN KEY igeny(alapanyag) REFERENCES alapanyag(ID) 
+ALTER TABLE igeny ADD CONSTRAINT fk_recept FOREIGN KEY igeny(recept) REFERENCES recept(ID) 
+
 ALTER TABLE igeny ADD PRIMARY KEY (alapanyag,recept);
 
 -- Utólag adja hozzá az `igeny` táblára azt a feltételt, hogy a mennyiseg nem lehet
@@ -57,13 +60,17 @@ SELECT alapanyag from igeny GROUP BY 1 HAVING COUNT(*) >= 2
 SELECT igeny.alapanyag, alapanyag.nev, COUNT(*) FROM (igeny JOIN alapanyag on igeny.alapanyag = alapanyag.ID) GROUP BY igeny.alapanyag HAVING COUNT(*)>=3
 
 -- 9. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok ID-jét írassa ki!
-SELECT alapanyag.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás';
+SELECT alapanyag.ID FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás';
 
 -- 10. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok nevét, mennyiségét és mértékegységét írassa ki!
+SELECT alapanyag.nev,igeny.mennyiseg,alapanyag.mertekegyseg FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás'
+
 
 -- 11. Listázza, melyik recepthez kell a legtöbb romlandó alapanyag! A recept nevét írassa ki! Ha több ilyen is van, elég egyet ezek közül.
+SELECT recept.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE alapanyag.romlando = 1 GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC LIMIT 1
 
 -- 12. Listázza, melyik recepthez kell a legtöbb romlandó alapanyag! A recept nevét írassa ki! Ha több ilyen is van, amihez egyforma számú kell, mindet írassa ki! Használjon beágyazott lekérdezést a darabszám meghatározásához!
+SELECT recept.nev, SUM(alapanyag.romlando) as TotalRomlando FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 HAVING SUM(alapanyag.romlando) > MAX(alapanyag.romlando) ORDER BY COUNT(alapanyag.romlando) DESC 
 
 -- 13. Az olyan alapanyagoknál, ahol a mértékegység a ’l’, a mértékegységet változtassa ’liter’-ré.!
 
