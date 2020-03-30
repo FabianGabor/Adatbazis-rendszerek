@@ -70,7 +70,10 @@ SELECT alapanyag.nev,igeny.mennyiseg,alapanyag.mertekegyseg FROM alapanyag JOIN 
 SELECT recept.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE alapanyag.romlando = 1 GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC LIMIT 1
 
 -- 12. Listázza, melyik recepthez kell a legtöbb romlandó alapanyag! A recept nevét írassa ki! Ha több ilyen is van, amihez egyforma számú kell, mindet írassa ki! Használjon beágyazott lekérdezést a darabszám meghatározásához!
-SELECT recept.nev, SUM(alapanyag.romlando) as TotalRomlando FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 HAVING SUM(alapanyag.romlando) > MAX(alapanyag.romlando) ORDER BY COUNT(alapanyag.romlando) DESC 
+SELECT *
+	FROM	
+	(SELECT recept.nev, SUM(alapanyag.romlando) as TotalRomlando FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC) AS T
+    WHERE T.TotalRomlando = (SELECT 2 FROM (SELECT recept.nev, SUM(alapanyag.romlando) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY 2 DESC LIMIT 1) AS SUMMA)
 
 -- 13. Az olyan alapanyagoknál, ahol a mértékegység a ’l’, a mértékegységet változtassa ’liter’-ré.!
 
