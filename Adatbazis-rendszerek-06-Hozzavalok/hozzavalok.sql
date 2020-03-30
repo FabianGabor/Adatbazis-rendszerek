@@ -76,6 +76,8 @@ SELECT *
     WHERE T.TotalRomlando = (SELECT 2 FROM (SELECT recept.nev, SUM(alapanyag.romlando) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY 2 DESC LIMIT 1) AS SUMMA)
 
 -- 13. Az olyan alapanyagoknál, ahol a mértékegység a ’l’, a mértékegységet változtassa ’liter’-ré.!
+ALTER TABLE alapanyag MODIFY mertekegyseg VARCHAR(5);
+update alapanyag set mertekegyseg='liter' where mertekegyseg='l';
 
 -- 14. Törölje azon recepteket, amikhez egyetlen alapanyag sem tartozik!
 
