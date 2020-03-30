@@ -54,32 +54,34 @@ SELECT alapanyag, count(*) from igeny GROUP by 1 ORDER BY 2;
 SELECT alapanyag from igeny GROUP by 1 ORDER BY COUNT(*) DESC LIMIT 3;
 
 -- 7. Listázza, mely alapanyag-ID-k szerepelnek legalább háromszor az `igeny` táblában!
-SELECT alapanyag from igeny GROUP BY 1 HAVING COUNT(*) >= 2
+SELECT alapanyag from igeny GROUP BY 1 HAVING COUNT(*) >= 2;
 
 -- 8. Listázza, mely alapanyag-ID-k szerepelnek legalább háromszor az `igeny` táblában, de az alapanyagok nevét is listázza!
-SELECT igeny.alapanyag, alapanyag.nev, COUNT(*) FROM (igeny JOIN alapanyag on igeny.alapanyag = alapanyag.ID) GROUP BY igeny.alapanyag HAVING COUNT(*)>=3
+SELECT igeny.alapanyag, alapanyag.nev, COUNT(*) FROM (igeny JOIN alapanyag on igeny.alapanyag = alapanyag.ID) GROUP BY igeny.alapanyag HAVING COUNT(*)>=3;
 
 -- 9. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok ID-jét írassa ki!
 SELECT alapanyag.ID FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás';
 
 -- 10. Listázza, mely alapanyagok kellenek a ’bográncsgulyás’ nevű recepthez! Az alapanyagok nevét, mennyiségét és mértékegységét írassa ki!
-SELECT alapanyag.nev,igeny.mennyiseg,alapanyag.mertekegyseg FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás'
+SELECT alapanyag.nev,igeny.mennyiseg,alapanyag.mertekegyseg FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE recept.nev = 'bográncsgulyás';
 
 
 -- 11. Listázza, melyik recepthez kell a legtöbb romlandó alapanyag! A recept nevét írassa ki! Ha több ilyen is van, elég egyet ezek közül.
-SELECT recept.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE alapanyag.romlando = 1 GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC LIMIT 1
+SELECT recept.nev FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept WHERE alapanyag.romlando = 1 GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC LIMIT 1;
 
 -- 12. Listázza, melyik recepthez kell a legtöbb romlandó alapanyag! A recept nevét írassa ki! Ha több ilyen is van, amihez egyforma számú kell, mindet írassa ki! Használjon beágyazott lekérdezést a darabszám meghatározásához!
 SELECT *
 	FROM	
 	(SELECT recept.nev, SUM(alapanyag.romlando) as TotalRomlando FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY COUNT(alapanyag.romlando) DESC) AS T
-    WHERE T.TotalRomlando = (SELECT 2 FROM (SELECT recept.nev, SUM(alapanyag.romlando) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY 2 DESC LIMIT 1) AS SUMMA)
+    WHERE T.TotalRomlando = (SELECT 2 FROM (SELECT recept.nev, SUM(alapanyag.romlando) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 ORDER BY 2 DESC LIMIT 1) AS SUMMA);
 
 -- 13. Az olyan alapanyagoknál, ahol a mértékegység a ’l’, a mértékegységet változtassa ’liter’-ré.!
 ALTER TABLE alapanyag MODIFY mertekegyseg VARCHAR(5);
 update alapanyag set mertekegyseg='liter' where mertekegyseg='l';
 
 -- 14. Törölje azon recepteket, amikhez egyetlen alapanyag sem tartozik!
+DELETE FROM recept WHERE ID = (SELECT ID FROM recept WHERE NOT EXISTS (SELECT * FROM igeny WHERE igeny.recept = recept.ID));
+
 
 -- 15. Ha a igeny.recept→recept.ID idegenkulcs-hivatkozásra ON DELETE CASCADE módosító van rátéve, ON UPDATE módosító nincs rátéve, és a ’bográcsgulyás’ nevű receptnek 10 alapanyaga van bejegyezve az `igeny` táblában, és kiadjuk a DELETE FROM recept WHERE nev=’bográcsgulyás’ utasítást, akkor hány rekord törlődik, és miért annyi?
 
