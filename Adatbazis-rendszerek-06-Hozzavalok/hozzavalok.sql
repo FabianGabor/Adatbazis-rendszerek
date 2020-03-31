@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS igeny (
     alapanyag int not null,
     recept int not null,
     mennyiseg int,
-    FOREIGN KEY (`alapanyag`) REFERENCES `alapanyag` (`ID`),
-    FOREIGN KEY (`recept`) REFERENCES `recept` (`ID`)
+    CONSTRAINT fk_alapanyag FOREIGN KEY igeny(alapanyag) REFERENCES alapanyag(ID),
+    CONSTRAINT fk_recept FOREIGN KEY igeny(recept) REFERENCES recept(ID) 
 );
 
-ALTER TABLE igeny ADD CONSTRAINT fk_alapanyag FOREIGN KEY igeny(alapanyag) REFERENCES alapanyag(ID) 
-ALTER TABLE igeny ADD CONSTRAINT fk_recept FOREIGN KEY igeny(recept) REFERENCES recept(ID) 
+-- ALTER TABLE igeny ADD CONSTRAINT fk_alapanyag FOREIGN KEY igeny(alapanyag) REFERENCES alapanyag(ID) 
+-- ALTER TABLE igeny ADD CONSTRAINT fk_recept FOREIGN KEY igeny(recept) REFERENCES recept(ID) 
 
 ALTER TABLE igeny ADD PRIMARY KEY (alapanyag,recept);
 
