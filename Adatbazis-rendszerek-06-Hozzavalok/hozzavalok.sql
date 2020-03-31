@@ -86,23 +86,27 @@ DELETE FROM recept WHERE ID = (SELECT ID FROM recept WHERE NOT EXISTS (SELECT * 
 -- 15. Ha a igeny.recept→recept.ID idegenkulcs-hivatkozásra ON DELETE CASCADE módosító van rátéve, ON UPDATE módosító nincs rátéve, és a ’bográcsgulyás’ nevű receptnek 10 alapanyaga van bejegyezve az `igeny` táblában, és kiadjuk a DELETE FROM recept WHERE nev=’bográcsgulyás’ utasítást, akkor hány rekord törlődik, és miért annyi?
 
 -- 16. Ha összesen két recept van a recept táblában, az ID-jeik 2 és 3, és jön egy INSERT INTO recept(nev) VALUES (’1’); utasítás, utána hány rekord lesz? [Emlékeztető: ID kulcs, nev NOT NULL]. Miért?
+-- 2 recept, mert ID értéke nincs meghatározva az utasításban, ezenfelül a ’ karakter nem az érték idézőjele, a helyes karakter az ' ezért a VALUES (’1’) az 1-es nevű oszlopra hivatkozik, ami nem létezik.
 
 -- 17. Ha összesen két recept van a recept táblában, az ID-jeik 2 és 3, és jön egy INSERT INTO recept(ID,nev) VALUES (1,’3’); utasítás, utána hány rekord lesz ebben a táblában? [Emlékeztető: ID kulcs, nev NOT NULL]. Miért?
+-- Ugyancsak 2, mert a ’3’ a 3-as nevű oszlopra hivatkozik, ami nem létezik. Ha VALUES (1,'3'), azaz ' van használva idézőjelként, akkor helyes az utasítás, és ebben az esetben hozzá lesz adva a táblához, 3 rekordot eredményezve.
 
 -- 18. Mi a különbség a UNIQUE és a PRIMARY KEY megszorítás között?
 -- Választ ide:
+-- A PRIMARY KEY egyedi értékeket kell tartalmazzon.
+-- Primary key nem lehet NULL értékű, a UNIQUE kulcs egyetlen NULL értéket felvehet.
 
 -- 19. Ha R(A INTEGER PRIMARY KEY, B INTEGER) tábla tartalma jelenleg a [(1,2),(2,3)] sorok, akkor mi lesz az eredménye az
 -- UPDATE R SET A=1 WHERE B=3; utasításnak, mi lesz a tábla új tartalma és miért?
--- Választ ide:
+-- Választ ide: Hiba, mert [(1,2),(1,3)] lenne az eredmény, viszont csak az A oszlop PRIMARY KEY, ezért duplikált elsődleges kulcsot eredményezne.
 
 -- 20. Ha R(A INTEGER, B INTEGER, PRIMARY KEY(A,B)) tábla tartalma jelenleg a [(1,2),(2,3)] sorok, akkor mi lesz az eredménye az
 -- UPDATE R SET A=1,B=A+4 WHERE B=3; utasításnak, mi lesz a tábla új tartalma és miért?
--- Választ ide:
+-- Választ ide: [(1,2),(1,5)] mert A és B oszlop is PRIMARY KEY, ezért a kulcspárok különböznek.
 
 -- 21. Ha R(A INTEGER, B INTEGER) tábla tartalma jelenleg a [(1,2),(2,3)] sorok, akkor mi lesz az eredménye az
 -- UPDATE R SET A=A+B+1,B=A+B+1 WHERE B=3; utasításnak, mi lesz a tábla új tartalma és miért?
 -- Eleme lesz egy olyan sor, amire teljesül R.A=R.B?
--- Választ ide:
+-- Választ ide: [(1,2),(6,10)] mert először az A=A+B+1 kerül elvézgésre, majd ennek az A-nak az értéke kerül a B=A+B+1 értékadásba. B = A + 2*B + 2 = A + 2 * (B+1) == A csak akkor teljesülhet, ha alaphelyzetbenb B=-1, de akkor viszont az UPDATE nem kerül végrehajtásra, mert a feltétel WHERE B=3.
 
 -- 22. Adjunk olyan nézettáblát, ami azt adja meg, hogy melyik alapanyag hány receptben fordul elő >10 mennyiségben.
