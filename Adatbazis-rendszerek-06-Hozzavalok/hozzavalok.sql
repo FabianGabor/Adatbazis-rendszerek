@@ -1,6 +1,6 @@
 -- Fábián Gábor
 -- CXNU8T
--- https://github.com/FabianGabor/Adatbazis-rendszerek/tree/master/Adatbazis-rendszerek-06-Hozzavalok
+-- https://github.com/FabianGabor/Adatbazis-rendszerek/blob/master/Adatbazis-rendszerek-06-Hozzavalok/hozzavalok.sql
 
 -- 1. Adjon meg egy CREATE SCRIPTET a következőféleképpen: 
 -- A látható kulcsok és idegen kulcsok is szerepeljenek (igeny.alapanyag→alapanyag.ID, igeny.recept→recept.ID). 
@@ -41,6 +41,8 @@ ALTER TABLE igeny ADD PRIMARY KEY (alapanyag,recept);
 -- 200-nál nagyobb.
 ALTER TABLE igeny ADD CHECK (igeny.mennyiseg>=200);
 
+-- Adjon meg SQL standard vagy MySQL (húzza alá, melyik) lekérdezéseket a következő feladatok megoldására! Minden feladat ezután 5p.
+-- Ezt a kérést nem igazán értem. SQL a nyelvezet, a MySQL egy szoftver, amely az SQL nyelvezetet használja. Amennyiben a tanár úr arra gondolt, hogy a használt SQL lekérdezések az Oracle/PostreSQL vagy MySQL által támogatottak, akkor ez esetben a válasz: MariaDB / MySQL
 
 -- 2. Listázza azon alapanyagok nevét és ID-ját, amit literben mérnek! ( ’l’ a mértékegység)
 SELECT id, nev from alapanyag where mertekegyseg = 'l';
