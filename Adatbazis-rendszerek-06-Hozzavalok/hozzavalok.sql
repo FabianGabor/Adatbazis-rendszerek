@@ -110,3 +110,4 @@ DELETE FROM recept WHERE ID = (SELECT ID FROM recept WHERE NOT EXISTS (SELECT * 
 -- Választ ide: [(1,2),(6,10)] mert először az A=A+B+1 kerül elvézgésre, majd ennek az A-nak az értéke kerül a B=A+B+1 értékadásba. B = A + 2*B + 2 = A + 2 * (B+1) == A csak akkor teljesülhet, ha alaphelyzetbenb B=-1, de akkor viszont az UPDATE nem kerül végrehajtásra, mert a feltétel WHERE B=3.
 
 -- 22. Adjunk olyan nézettáblát, ami azt adja meg, hogy melyik alapanyag hány receptben fordul elő >10 mennyiségben.
+SELECT alapanyag.nev, COUNT(igeny.recept) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 HAVING COUNT(igeny.recept) > 10;
