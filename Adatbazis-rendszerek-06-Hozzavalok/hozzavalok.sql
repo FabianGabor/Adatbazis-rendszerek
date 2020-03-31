@@ -1,3 +1,7 @@
+-- Fábián Gábor
+-- CXNU8T
+-- https://github.com/FabianGabor/Adatbazis-rendszerek/tree/master/Adatbazis-rendszerek-06-Hozzavalok
+
 -- 1. Adjon meg egy CREATE SCRIPTET a következőféleképpen: 
 -- A látható kulcsok és idegen kulcsok is szerepeljenek (igeny.alapanyag→alapanyag.ID, igeny.recept→recept.ID). 
 -- Az a kívánalom is szerepeljen a leírásban, hogy a recept tábla `nev` mezője kötelezően megadandó, valamint, az az
