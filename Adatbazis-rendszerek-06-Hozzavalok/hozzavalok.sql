@@ -87,9 +87,11 @@ update alapanyag set mertekegyseg='liter' where mertekegyseg='l';
 
 -- 14. Törölje azon recepteket, amikhez egyetlen alapanyag sem tartozik!
 DELETE FROM recept WHERE ID = (SELECT ID FROM recept WHERE NOT EXISTS (SELECT * FROM igeny WHERE igeny.recept = recept.ID));
-
+--
+DELETE FROM recept WHERE ID NOT IN (SELECT recept FROM igeny);
 
 -- 15. Ha a igeny.recept→recept.ID idegenkulcs-hivatkozásra ON DELETE CASCADE módosító van rátéve, ON UPDATE módosító nincs rátéve, és a ’bográcsgulyás’ nevű receptnek 10 alapanyaga van bejegyezve az `igeny` táblában, és kiadjuk a DELETE FROM recept WHERE nev=’bográcsgulyás’ utasítást, akkor hány rekord törlődik, és miért annyi?
+-- 1+10 a CASCADE miatt az igeny tablabol is torlodik 10 rekord
 
 -- 16. Ha összesen két recept van a recept táblában, az ID-jeik 2 és 3, és jön egy INSERT INTO recept(nev) VALUES (’1’); utasítás, utána hány rekord lesz? [Emlékeztető: ID kulcs, nev NOT NULL]. Miért?
 -- 2 recept, mert ID értéke nincs meghatározva az utasításban, ezenfelül a ’ karakter nem az érték idézőjele, a helyes karakter az ' ezért a VALUES (’1’) az 1-es nevű oszlopra hivatkozik, ami nem létezik.
@@ -117,3 +119,5 @@ DELETE FROM recept WHERE ID = (SELECT ID FROM recept WHERE NOT EXISTS (SELECT * 
 
 -- 22. Adjunk olyan nézettáblát, ami azt adja meg, hogy melyik alapanyag hány receptben fordul elő >10 mennyiségben.
 SELECT alapanyag.nev, COUNT(igeny.recept) FROM alapanyag JOIN igeny ON igeny.alapanyag = alapanyag.ID JOIN recept ON recept.ID = igeny.recept GROUP BY 1 HAVING COUNT(igeny.recept) > 10;
+
+-- CREATE VIEW n10 AS SELECT alapanyag.nev, COUNT(igeny.recept) FROM igeny JOIN alapanyag ON igeny.alapanyag=alapanyag.ID WHERE 1 GROUP BY 1 HAVING COUNT(igeny.recept)>10;
