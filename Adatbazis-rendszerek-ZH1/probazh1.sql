@@ -19,12 +19,6 @@ CREATE OR REPLACE TABLE tantargy (
     elmOraszam int(11)
 );
 
-CREATE OR REPLACE TABLE tanterv (
-    targy int(11),
-    szak int(11),
-    kotelezo tinyint(1)
-);
-
 CREATE OR REPLACE TABLE szak (
     kod int(11) PRIMARY KEY,
     nev varchar(20),
