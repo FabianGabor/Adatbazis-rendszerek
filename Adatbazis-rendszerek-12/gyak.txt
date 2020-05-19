@@ -1,0 +1,112 @@
+Adatbázis gyakorlat 12.
+Funkcionális függőség, normalizálás, BCNF.
+1.      Tekintsünk egy relációt a Magyarországon elő emberekről. Tartalmazza a nevüket, személyi számukat ill. útlevélszámukat es állampolgárságukat, lakcím irányitószám, város, utcanév, házszám, vezetékes telefonszam (NULL, ha nincs). Milyen funkcionális függőségekről várhatjuk, hogy érvényesek? Melyek a reláció kulcsai? Lehet-e ugyanazon embereknek ugyanazon személyi számuk? Mi legyen azokkal, akiknek nincs útlevelük?
+
+lakcim = (iszam, varos, unev, hszam)
+lakcim -> tel
+tel -> lakcim (ha tel nem NULL)
+szSzam -> nev, uSzam, allamp, lakcim, tel
+uSzam -> nev, szSzam, allamp, lakcim, tel
+nev,lakcim -> szSzam, uSzam, allamp, tel (ugyanazon a cimen esetleg 2 azonos nevu szemely?)
+
+Utlevél hiányában személyi szám használata.
+
+
+2.      Tekintsünk egy zárt konténerben levő gázmolekulák jelenlegi helyzetet leíró relációt. Az attribútumok legyenek a molekulaID :), s a molekulák helyzetének x,y,z koordinátai es a molekulák sebességeinek dx,dy,dz koordinátai. Milyen funkcionális függőségek fedezhetők föl? Melyek a kulcsok (néha a “fizika” is szolgáltat kulcsot...:)
+
+(ID, koord, sebesseg) (koord az aktualis vagy a kezdeti?)
+ID -> koord
+ID -> sebesseg
+ID -> koord, sebesseg
+koord aktualis eseten:
+koord -> ID, sebesseg
+koord kezdeti eseten:
+koord, sebesseg -> ID
+
+3.         Tekintsünk egy relációt az R(A,B,C,D,E) sémával es tfh. Az AB --> C, C → D
+függőségek érvényesek.
+ 
+n  Melyek az összes nemtriviális függőségek, amelyek ezekből következnek?
+AB -> D
+ABC -> D
+AB -> CD
+AB U E -> C U E
+AB U E -> D U E
+AB U E -> CD U E
+
+n  Melyek R összes kulcsai?
+AB, ABC, ABCD
+
+n  jelezzünk minden BCNF-sértést
+n  Bontsuk fel a relációkat, amelyiket szükséges, BCNF-ben levő relációkra
+ 
+4.         Tekintsünk egy relációt az R(A,B,C,D,E) sémával es tfh. Az AB --> C, C → D, C → E
+és E → A függőségek érvényesek.
+ 
+n  Melyek az összes nemtriviális függőségek, amelyek ezekből következnek?
+n  Melyek R összes kulcsai?
+n  jelezzünk minden BCNF-sértést
+n  Bontsuk fel a relációkat, amelyiket szükséges, BCNF-ben levő relációkra
+ 
+ 
+ 
+5.      Az előbbi feladat, csak
+a)      A --> B, B → C es B → D függőségekkel
+b)      AB --> C, BC → D, AD → B es CD → A függőségekkel
+c)      B --> C, B → D függőségekkel
+d)      A --> B, B → C, C → D es D → A függőségekkel
+e)      AB --> C, DE → C, B → D függőségekkel
+f)       AB --> C, C → D, D → B es D → E függőségekkel
+
+ 
+ 
+6.      Mutassuk meg, hogy ha az B → C funkcionális függőség fennáll, abból meg nem következik, hogy a C → B függőség is fennáll. Ugyanez arra, hogy AB → C -ből nem következik B → C.
+
+ 
+ 
+7.             A könyvtárban csak az aktuális kölcsönzéseket tartják számon. Ha egy könyv ki lett véve, akkor a sorában ki vannak töltve az olvasójegy és a kölcsönzésDátuma mezők.
+ 
+Kölcsönzés ( leltáriSzám, könyvCím, szerző, kiadó, kiadásiÉv, olvasójegy,  kölcsönzésDátuma)
+Olvasó(olvasójegy, név, lakcím)
+Ezek a felismert funkci. függések:
+{leltáriSzám} → {könyvCím, szerző, kiadó, kiadásiÉv, olvasójegy, kölcsönzésDátuma}
+{könyvCím, szerző, kiadásiÉv} → {kiadó}
+{olvasójegy} →{név, lakcím}[1]
+ 
+n Melyek az összes nemtriviális függőségek, amelyek ezekből következnek?
+n Melyek R összes kulcsai?
+n jelezzünk minden BCNF-sértést
+n Bontsuk fel a relációkat, amelyiket szükséges, BCNF-ben levő relációkra
+n Milyen anomáliákat okozhat, ha ez az adatbázis nem BCNF_ben van?
+ 
+8.      Egy kábeltévés cég a következő adatokat közli egy internetes táblázatban (tv-műsor ömlesztve). Melyik napon melyik filmet melyik tévéadó adja hány órától, ki a film rendezője, három főszereplője, a főszereplők rajongói postacíme, mi a film típusa (akció, thriller, vígjáték, romantikus), korosztályi korlátozás (nincs/12/16/18), az adó hányas programcsomagban szerepel, hány forint az adott programcsomag ára, ki a film forgalmazója, és mi a forgalmazó címe, internetes honlapjának a címe, azon belül mi a film honlapjának a címe. Ez táblázat formájában a következő alakú: FILM(filmcím, rendező, főszereplő1, főszereplő2, főszereplő-3, főszer1-cím, főszer2-cím, főszer3-cím, adó, adásdátumidő, filmtípus, korosztályikorlát, hanyasprogramcsomag, programcsomagár, filmforgalmazó, forgalmazócím, forgalmazóhonlap, filmhonlap) Ezek a funkcionális függőségek fedezhetők föl, és a következményeik:
+adó, adásdátumidő à filmcím
+adó → hanyasprogramcsomag (egy adó csak egy csomagban szerepelhet, némileg   unrealisztikusan)
+hanyasprogramcsomag → programcsomagár
+filmcim → rendező,  főszereplő 1–3, filmtípus,  filmforgalmazó, forgalmazócím, forgalmazóhonlap, filmhonlap, korosztalyikorlát,
+filmforgalmazó →  forgalmazócím, forgalmazóhonlap
+főszereplő1→főszer1-cím,       |||         főszereplő2→főszer2-cím  ||| 3-ra is ez
+n Melyek az összes nemtriviális függőségek, amelyek ezekből következnek?
+
+ado, adasdatumido -> filmcim
+ado, adasdatumido -> rendezo, foszereplok, filmtipus, filmforgalmazó, forgalmazócím, forgalmazóhonlap, filmhonlap, korosztalyikorlát
+ado, adasdatumido -> forgalmazócím, forgalmazóhonlap
+ado, adasdatumido -> főszer1/2/3-cím
+ado, adasdatumido -> a fentiek egyesitve
+
+ado -> programcsomagar
+
+n Melyek R összes kulcsai?
+n jelezzünk minden BCNF-sértést
+n Bontsuk fel a relációkat, amelyiket szükséges, BCNF-ben levő relációkra
+n Milyen anomáliákat okozhat, ha ez az adatbázis nem BCNF_ben van?
+ 
+ 
+ 
+ 
+
+
+[1] https://www.inf.u-szeged.hu/~gnemeth/kurzusok/adatbgyak/exe/Normalizalas_web/plda_knyvtri_adatbzis.html
+
+
+
